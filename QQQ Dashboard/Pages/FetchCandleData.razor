@@ -1,0 +1,114 @@
+﻿@page "/"
+
+@using RenkoChartDemo.Models
+@using RenkoChartDemo.Data
+@using Highcharts.RenkoDiagram
+@using MatBlazor
+
+
+<div class="resizable">
+
+    <div style="display:flex;column-gap:10px;">
+        <h4 style="flex:0; white-space: nowrap">Renko Chart</h4>
+        <MatButton Style="flex:0;float:right" Icon="settings" Raised="true" OnClick="@OpenSettingsDialog" />
+        <MatButton Style="flex:0;float:right" Icon="table_chart" Raised="true" OnClick="@OpenDataDialog" />
+    </div>
+
+    <div style="display:flex;column-gap:10px;">
+
+        <MatCard Class="mat-card">
+
+            <MatCardContent>
+                <RenkoDiagram @ref="renkoDiagram" jsonSerializedData="@serializedCandles" chartTitle="@chartTitle"
+                              brickSize="@barSize" xValueFieldName="@xFieldName" yValueFieldName="@yFieldName" chartHeight="@height" />
+            </MatCardContent>
+        </MatCard>
+
+
+        <MatDialog @bind-IsOpen="@settingsDialogIsOpen">
+            <MatDialogTitle><h4>Renko Chart Settings</h4></MatDialogTitle>
+            <MatDialogContent>
+                <div class="mat-item">
+                    <h6><b>Chart Title</b></h6>
+                    <input type="text" @bind-value="@chartTitle" />
+                </div>
+
+                <div class="mat-item">
+                    <h6><b>Chart Date</b></h6>
+                    <input type="date" @bind-value="@chartDate" min="2021-06-01" max="2021-06-04" />
+                </div>
+
+                <div class="mat-item">
+                    <h6><b><i>x</i> Field Name</b></h6>
+                    <input type="text" @bind-value="@xFieldName" />
+                </div>
+
+                <div class="mat-item">
+                    <h6><b><i>y</i> Field Name</b></h6>
+                    <input type="text" @bind-value="@yFieldName" />
+                </div>
+
+                <div class="mat-item">
+                    <h6><b>Chart Height</b></h6>
+                    <input type="text" @bind-value="@height" />
+                </div>
+
+                <div class="mat-item">
+                    <h6><b>Bar Size</b></h6>
+                    <input type="number" @bind-value="@barSize" />
+                    @*<RadzenButton Click=@(args => refreshCandles()) Text="Refresh" Style="margin-bottom: 20px; width: 150px" />*@
+                </div>
+
+            </MatDialogContent>
+            @*<MatDialogActions>
+                    <MatButton OnClick="@(e => { dialogIsOpen = false; })">No Thanks</MatButton>
+                    <MatButton OnClick="@OkClick">OK</MatButton>
+                </MatDialogActions>*@
+        </MatDialog>
+
+
+        <MatDialog @bind-IsOpen="@dataDialogIsOpen">
+            <MatDialogTitle><h4>Renko Chart Data</h4></MatDialogTitle>
+            <MatDialogContent>
+                <h4> @candles.Count Candles</h4>
+                <RadzenDataGrid Data="@candles" TItem="Candle" AllowPaging="true" PageSize="10" AllowColumnResize="true">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Candle" Title="RunDateTime" Property="RunDateTime" FormatString="{0:yyyy-MM-dd hh:mm}" Width="200px" />
+                        <RadzenDataGridColumn TItem="Candle" Title="Open" Property="OpenPrice" FormatString="{0:n2}" Width="100px" />
+                        <RadzenDataGridColumn TItem="Candle" Title="High" Property="HighPrice" FormatString="{0:n2}" Width="100px" />
+                        <RadzenDataGridColumn TItem="Candle" Title="Low" Property="LowPrice" FormatString="{0:n2}" Width="100px" />
+                        <RadzenDataGridColumn TItem="Candle" Title="Close" Property="ClosePrice" FormatString="{0:n2}" Width="100px" />
+                    </Columns>
+                </RadzenDataGrid>
+            </MatDialogContent>
+        </MatDialog>
+
+    </div>
+</div>
+
+@code {
+
+
+}
+
+<style>
+    h6 {
+        width: 150px;
+    }
+
+    .mat-card {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .mat-item {
+        display: flex;
+        column-gap: 10px;
+        align-items: baseline
+    }
+
+    .resizable {
+        width: 100%;
+        height: auto;
+    }
+</style>
